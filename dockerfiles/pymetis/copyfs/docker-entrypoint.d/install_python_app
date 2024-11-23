@@ -1,0 +1,25 @@
+#!/bin/bash
+#set -e
+set -o errexit
+set -o xtrace
+
+if [ "$APP_SETUP" == "yes" ]; then 
+	{
+				echo "Take action $APPLICATION_PATH is Empty";
+				
+				# Update PIP
+				pip install --upgrade pip
+				
+				# Copy app files ...
+				echo "Install App files ...";
+				cp -pr /opt/app/* $APPLICATION_PATH
+				
+				# Install Requirements with pip
+				echo "Install Requirements ..."
+				pip install -r ${APPLICATION_PATH}requirements.txt
+
+	}
+fi;
+
+export PATH=~/.local/bin:$PATH;
+

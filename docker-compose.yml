@@ -1,0 +1,52 @@
+##################################################
+############# ---  PYMETIS  ---  #################
+#
+# Last revision - Federico Bellati - 21/11/2024
+#
+#version: "3.9"
+
+services:
+
+  pymetis:
+    container_name: ${PYMETIS_CONTAINER_NAME}
+    hostname: ${PYMETIS_CONTAINER_NAME}
+    image: python-${PYMETIS_CONTAINER_NAME}-ismar:${PYTHON_VERSION}
+    build:
+      context: ./dockerfiles/pymetis
+      args:
+        VERSION: ${PYTHON_VERSION}
+        USER_ID: ${USER_ID:-0}
+        GROUP_ID: ${GROUP_ID:-0}
+        USER_NAME: ${PYTHON_USER_NAME}
+        GROUP_NAME: ${PYTHON_GROUP_NAME}
+        PYTHON_CONTAINER_PORT: 5000
+    restart: unless-stopped
+    environment:
+      - APP_SETUP=yes
+      - APPLICATION_PATH=${APPLICATION_PATH}
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./dockerfiles/pymetis/rootfs/home/python/app:/home/python/.local
+      - ./dockerfiles/pymetis/rootfs/home/python/app:/home/python/app
+    ports:
+      - 8080:8080
+    logging:
+      driver: "json-file"
+      options:
+        max-size: 10m
+        max-file: "3"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/status/"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+    command: "sleep infinity"
+    #command: "python3 main.py"
+    networks:
+      - service-network
+
+networks:
+  service-network:
+    driver: bridge
+    name: ${NETWORK}
+    external: true
