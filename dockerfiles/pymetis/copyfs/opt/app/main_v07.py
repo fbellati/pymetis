@@ -62,7 +62,7 @@ def index():
         adjacency_array = convert_to_adjacency_list(elements)
         print("Created adjacency array")
         print("Calling pymetys ...")
-        n_cuts, membership = pymetis.part_graph(nparts, adjacency=adjacency_array)
+        n_cuts, membership = pymetis.part_graph(nparts, adjacency=adjacency_array, contiguous=True)
         print("PyMetis finished!")
         print("Number of cuts: ",n_cuts)
         #print(membership)
@@ -91,8 +91,8 @@ def index():
         x_coords_all = []
         y_coords_all = []
         for triangle in triangles:
-            x_coords_all.extend([x_coords[triangle[0]], x_coords[triangle[1]], x_coords[triangle[2]], x_coords[triangle[0]], None])
-            y_coords_all.extend([y_coords[triangle[0]], y_coords[triangle[1]], y_coords[triangle[2]], y_coords[triangle[0]], None])
+            x_coords_all.extend([x_coords[triangle[0]], x_coords[triangle[1]], x_coords[triangle[2]], None])
+            y_coords_all.extend([y_coords[triangle[0]], y_coords[triangle[1]], y_coords[triangle[2]], None])
         print("AllCoords created!")
         # Creare una singola traccia Scattergl
         fig.add_trace(go.Scattergl(
